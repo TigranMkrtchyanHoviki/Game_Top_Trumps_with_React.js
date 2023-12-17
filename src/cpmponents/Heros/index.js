@@ -54,10 +54,19 @@ const Heros = ({yourPoint, computerPoint, addYourPoint, addComputerPoint, set_in
         let secondtHero_ID = Math.floor(Math.random() * 731) + 1
 
         try {
-            const result_1 = await fetch(`https://superheroapi.com/api.php/4317279331831123/${firstHero_ID}`)
+            // հարցում սերվեր 1-ին հերոսի համար
+            const result_1 = await fetch(`https://superheroapi.com/api.php/4317279331831123/${firstHero_ID}`) 
             const data_1 = await result_1.json()
+            // հարցում սերվեր 2-րդ հերոսի համար
             const result_2 = await fetch(`https://superheroapi.com/api.php/4317279331831123/${secondtHero_ID}`)
             const data_2 = await result_2.json()
+
+            // 1-ին եվ 2-րդ հարցումների ժամանակ եկող տվյալների օբյեկտի մեջ կա ամբողջական ինֆորմացիա տվյալ id-ով հերոսի մասին, 
+            // բայց քանի որ ամբողջական ինֆորմացիայի օբյեկտի մեջ գոյություն ունեցող powerstats դաշտը նույնպես օբյեկտ է, 
+            // որի մեջ պահպանվող տվյալներն իրենցից պետք է ներկայացն են հերոսների տարբեր հատկանիշների վերաբերյալ միավորներ 1-100 սահմանում,
+            // սակայն շատ հաճախ լինում են null արժեքի, ուստի ստիպված նորից առանձին հարցում եմ անում սերվեր, URL-ի մեջ ավելացնելով powerstats մասը,
+            // որովհետև տվյալ դեպքում, երբ առանձին հարցում եմ անում սերվեր powerstats-ի մասին ինֆորմացիա ստանալու համար,
+            // հազվադեպ է պատահում, որ օբյեկտի արժեքները null լինեն։
 
             const hero_1_prop = await fetch(`https://superheroapi.com/api.php/4317279331831123/${firstHero_ID}/powerstats`)
             const hero_1_result = await hero_1_prop.json()
@@ -68,7 +77,7 @@ const Heros = ({yourPoint, computerPoint, addYourPoint, addComputerPoint, set_in
             data_1.powerstats = hero_1_result
             data_2.powerstats = hero_2_result
 
-            const datas = [data_1, data_2].map((data, index) => {
+            const datas = [data_1, data_2].map((data) => {
                 if (data.powerstats[state] === "null") {
                     data.powerstats[state] = Math.floor(Math.random() * 100 + 1) + ""
                     return data
@@ -169,6 +178,8 @@ const Heros = ({yourPoint, computerPoint, addYourPoint, addComputerPoint, set_in
                                             }}
                                             className={`${HerosStyle.hero_img_container}`}
                                         >
+
+                                        {/* Երբեմն  hero.image.url-ը բրաուզերում նկար չի բացում*/}
                                             <img src={`${hero.image.url}`} alt={"this is a photo"} />
                                         </div>
                                         :
